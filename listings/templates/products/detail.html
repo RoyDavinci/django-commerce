@@ -1,0 +1,125 @@
+{% extends "base.html" %} {% block title %} detail product -{{ product.name }}
+{% endblock title %} {% block content %}
+
+<div class="card shadow-custom mx-auto border-0 col-lg-8">
+	<div class="row justify-content-center">
+		<div class="col-lg-6">
+			<img src="{{ product.image.url }}" class="rounded-0 img-fluid" alt="" />
+		</div>
+		<div class="col-lg-6">
+			<div class="top">
+				<h2 class="mt-4 font-weight-bold text-grey">{{ product.name }}</h2>
+				<div>
+					<span class="font-weight-bold text-grey"> Hotness: </span>
+					{{ product.shu }} SHU
+				</div>
+				<div>
+					<span class="font-weight-bold text-grey"> Volume </span> 100ml
+				</div>
+			</div>
+			<div class="mt-3">{{ product.description }}</div>
+			{% if product.available %}
+			<div class="alert alert-success my-3 text-center">Available</div>
+			{% else %}
+			<div class="alert alert-danger my-3 text-center">
+				Currently Not Avaliable
+			</div>
+			{% endif %}
+			<hr />
+			<div class="review">
+				<span class="font-weight-bold text-grey">
+					{{ product.get_average_review }}/5.0
+				</span>
+				<div class="mb-3 font-weight-bold">
+					<a
+						href=""
+						class="text-warning"
+						data-toggle="modal"
+						data-target="#mymodal"
+						>Write Review</a
+					>
+				</div>
+			</div>
+			<div class="mb-4">
+				<form action="">
+					<span class="input-group add-to-cart shadow-custom">
+						<div class="input-group-prepend">
+							<span
+								class="input-group-text font-weight-bold px-3 btn btn-block price"
+							>
+								${{ product.price }}
+							</span>
+						</div>
+						<span id="minus" class="input-group-text button_minus px-4">-</span>
+						<input
+							type="number"
+							value="1"
+							class="form-control text-center px-3"
+							name=""
+							id=""
+						/>
+						<span id="plus" class="input-group-text button_plus px-4">+</span>
+						<div class="input-group-append">
+							<button
+								class="btn btn-danger px-4 reduce_padding"
+								type="submit"
+								data-toggle="tooltip"
+								data-placement="top"
+								title="Add To Cart"
+							>
+								<i class="fas fa-shopping-cart"></i>
+							</button>
+						</div>
+					</span>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<hr class="col-7 mx-auto" />
+<div class="card shadow-custom border-0 col-lg-8 mx-auto mb-3">
+	<h3 class="py-2 text-grey">Reviews:</h3>
+	{% for review in product.reviews.all %}
+	<span class="font-weight-bold py-2 text-grey">
+		{{ review.author }} - {{ review.rating }} - {{ review.created|date }}
+	</span>
+	<span class="tetxt-justify pb-2"> {{ review.text }} </span>
+	<hr />
+	{% empty %}
+	<span class="pb-2">Currently no reviews</span>
+	{% endfor %}
+</div>
+<!-- modal -->
+<div class="model" id="my-modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Write your Review</h5>
+				<button class="close" data-dismiss="modal" type="button">
+					&times;
+				</button>
+			</div>
+			<form method="POST">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="bg-grey">
+						<div class="text-center pt-2">
+							Rating: {{ review_form.rating.0 }} {{ review_form.rating.1 }}
+							{{review_form.rating.2 }} {{ review_form.rating.3 }}
+							{{review_form.rating.4 }}
+						</div>
+						<hr class="m-0" />
+						<div class="input-field text-center p-2">
+							{{ review_form.text }}
+						</div>
+					</div>
+				</div>
+				<div class="model-footer">
+					<button class="btn btn-danger" type="submit">Confirm</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}
